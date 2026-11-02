@@ -23,10 +23,10 @@
             --gun-5: #18151a; --gun-6: #1a1a15; --gun-7: #181818;
         }
 
-        body { margin: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-main); color: var(--text-main); overflow-y: hidden; transition: background 0.3s, color 0.3s; }
+        body { margin: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-main); color: var(--text-main); overflow-y: auto; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
         .header { background: var(--header-bg); padding: 16px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: background 0.3s; }
         .tema-btn { background: transparent; border: none; font-size: 24px; cursor: pointer; padding: 0; outline: none; }
-        .hafta-alani { display: flex; overflow-x: auto; overflow-y: auto; height: calc(100vh - 60px); padding-bottom: 20px; }
+        .hafta-alani { display: flex; overflow-x: auto; overflow-y: visible; min-height: calc(100vh - 60px); padding-bottom: 100px; -webkit-overflow-scrolling: touch; }
         .gun { min-width: 140px; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 8px; gap: 8px; transition: background 0.3s; }
         #Pazartesi { background-color: var(--gun-1); } #Sali { background-color: var(--gun-2); } #Carsamba { background-color: var(--gun-3); } #Persembe { background-color: var(--gun-4); } #Cuma { background-color: var(--gun-5); } #Cumartesi { background-color: var(--gun-6); } #Pazar { background-color: var(--gun-7); }
         
