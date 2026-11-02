@@ -59,29 +59,34 @@ planlar.forEach(plan => ekranaKutuCiz(plan));
 // ----------------------------------------------------
 // YENİ ÖZELLİK: GÜN BAŞLIKLARINA BASILI TUTMA (LONG PRESS)
 // ----------------------------------------------------
-let seciliIslemGunu = null;  // Hangi gün başlığına tıklandı?
-let kopyalananGun = null;    // Hangi günün verileri kopyalandı?
-let basiliTutmaZamanlayici;  // Parmağı ekranda tutma süresini sayar
+let seciliIslemGunu = null;  
+let kopyalananGun = null;    
+let basiliTutmaZamanlayici;  
 
 document.querySelectorAll(".gun-baslik").forEach(baslik => {
-    const gunId = baslik.parentElement.id; // Örneğin: "Pazartesi"
-    const gunIsmi = baslik.textContent;    // Örneğin: "Pzt"
+    const gunId = baslik.parentElement.id; 
+    const gunIsmi = baslik.textContent;    
 
-    // Mobil ekranlarda dokunma başladığında sayacı başlat (600 milisaniye)
-    baslik.addEventListener("touchstart", () => {
+    baslik.addEventListener("touchstart", (e) => {
         basiliTutmaZamanlayici = setTimeout(() => popupAc(gunId, gunIsmi), 600);
     });
-    // Bilgisayarda tıklama başladığında
-    baslik.addEventListener("mousedown", () => {
+    
+    baslik.addEventListener("mousedown", (e) => {
         basiliTutmaZamanlayici = setTimeout(() => popupAc(gunId, gunIsmi), 600);
     });
 
-    // Parmak çekilirse veya fare kayarsa işlemi iptal et
     const iptalEt = () => clearTimeout(basiliTutmaZamanlayici);
+    
     baslik.addEventListener("touchend", iptalEt);
-    baslik.addEventListener("touchmove", iptalEt);
     baslik.addEventListener("mouseup", iptalEt);
     baslik.addEventListener("mouseleave", iptalEt);
+    // HASSASİYET FİXİ: touchmove bilerek kaldırıldı ki parmak hafif kaysa bile menü açılsın.
+
+    // TİTREŞİM VE VARSAYILAN MENÜ FİXİ:
+    // Telefonun kendi kopyala/yapıştır menüsünün çıkmasını engeller
+    baslik.addEventListener("contextmenu", (e) => {
+        e.preventDefault(); 
+    });
 });
 
 // Basılı tutma başarılı olursa menüyü aç
