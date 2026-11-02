@@ -1,4 +1,4 @@
-const CACHE_NAME = "planlayici-v1";
+const CACHE_NAME = "planlayici-v2";
 // Önbelleğe alınacak dosyalar
 const DOSYALAR = [
     "./",
