@@ -155,20 +155,41 @@ function ekranaKutuCiz(plan) {
     let uzunBasildi = false;
     let basmaZamanlayici;
 
-    // Görev Uzun Basma İşlemleri (Renk Seçimi)
-    const basla = () => { uzunBasildi = false; basmaZamanlayici = setTimeout(() => { uzunBasildi = true; renkDegisecekPlanId = plan.id; renkPopup.style.display = "flex"; }, 600); };
+    // Görev Uzun Basma İşlemleri (Renk Seçimi) - 500ms'ye çekildi
+    const basla = (e) => { 
+        uzunBasildi = false; 
+        basmaZamanlayici = setTimeout(() => { 
+            uzunBasildi = true; 
+            renkDegisecekPlanId = plan.id; 
+            renkPopup.style.display = "flex"; 
+        }, 500); 
+    };
+    
     const durdur = () => clearTimeout(basmaZamanlayici);
 
-    gorevKutusu.addEventListener("touchstart", basla);
+    gorevKutusu.addEventListener("touchstart", basla, { passive: true });
     gorevKutusu.addEventListener("mousedown", basla);
+    
     gorevKutusu.addEventListener("touchend", durdur);
     gorevKutusu.addEventListener("mouseup", durdur);
     gorevKutusu.addEventListener("mouseleave", durdur);
-    gorevKutusu.addEventListener("contextmenu", (e) => e.preventDefault());
+    
+    // Parmak kaydırılırken (scroll) yanlışlıkla menü açılmasını engeller
+    gorevKutusu.addEventListener("touchmove", durdur, { passive: true });
+    
+    // Telefonun varsayılan titreşimli metin seçim menüsünü kesin olarak engeller
+    gorevKutusu.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    });
 
     // Görev Kısa Tıklama İşlemi (Silme)
-    gorevKutusu.addEventListener("click", function() {
-        if (uzunBasildi) return; // Uzun basıldıysa silme ekranını açma
+    gorevKutusu.addEventListener("click", function(e) {
+        if (uzunBasildi) {
+            e.preventDefault();
+            return; // Uzun basıldıysa silme ekranını açma
+        }
         silinecekGorevKutusu = this;
         silinecekGorevId = plan.id;
         silmePopup.style.display = "flex";
