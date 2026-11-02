@@ -4,66 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Haftalık Planlayıcı</title>
+    <!-- manifest bağlantısı duruyor -->
+    <link rel="manifest" href="manifest.json">
     <style>
-        /* TEMA DEĞİŞKENLERİ */
         :root {
-            --bg-main: #fafafa;
-            --text-main: #333333;
-            --header-bg: #ffffff;
-            --border-color: #f0f0f0;
-            --popup-bg: rgba(255, 255, 255, 0.7);
-            --kutu-bg: #ffffff;
-            --input-border: #e0e0e0;
-            --btn-bg: #2b2b2b;
-            --btn-text: #ffffff;
-            --kapat-bg: #f0f0f0;
-            --kapat-text: #555555;
-            
-            /* Gündüz Modu Gün Arka Planları (Çok açık) */
+            --bg-main: #fafafa; --text-main: #333333; --header-bg: #ffffff; --border-color: #f0f0f0;
+            --popup-bg: rgba(255, 255, 255, 0.7); --kutu-bg: #ffffff; --input-border: #e0e0e0;
+            --btn-bg: #2b2b2b; --btn-text: #ffffff; --kapat-bg: #f0f0f0; --kapat-text: #555555;
             --gun-1: #fdf5f6; --gun-2: #fff8f0; --gun-3: #f5fbf5; --gun-4: #f0f8ff; 
             --gun-5: #f9f5ff; --gun-6: #fffcf0; --gun-7: #fdfdfd;
         }
 
         body.dark-theme {
-            --bg-main: #121212;
-            --text-main: #e0e0e0;
-            --header-bg: #1e1e1e;
-            --border-color: #2a2a2a;
-            --popup-bg: rgba(20, 20, 20, 0.8);
-            --kutu-bg: #252525;
-            --input-border: #444444;
-            --btn-bg: #e0e0e0;
-            --btn-text: #121212;
-            --kapat-bg: #333333;
-            --kapat-text: #e0e0e0;
-            
-            /* Gece Modu Gün Arka Planları (Çok koyu, göz yormayan) */
+            --bg-main: #121212; --text-main: #e0e0e0; --header-bg: #1e1e1e; --border-color: #2a2a2a;
+            --popup-bg: rgba(20, 20, 20, 0.8); --kutu-bg: #252525; --input-border: #444444;
+            --btn-bg: #e0e0e0; --btn-text: #121212; --kapat-bg: #333333; --kapat-text: #e0e0e0;
             --gun-1: #1a1516; --gun-2: #1c1815; --gun-3: #151a15; --gun-4: #15181a; 
             --gun-5: #18151a; --gun-6: #1a1a15; --gun-7: #181818;
         }
 
-        /* Genel modern, yumuşak font ve arka plan */
         body { margin: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-main); color: var(--text-main); overflow-y: hidden; transition: background 0.3s, color 0.3s; }
-        
         .header { background: var(--header-bg); padding: 16px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: background 0.3s; }
         .tema-btn { background: transparent; border: none; font-size: 24px; cursor: pointer; padding: 0; outline: none; }
-        
         .hafta-alani { display: flex; overflow-x: auto; overflow-y: auto; height: calc(100vh - 60px); padding-bottom: 20px; }
-        
         .gun { min-width: 140px; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 8px; gap: 8px; transition: background 0.3s; }
-        #Pazartesi { background-color: var(--gun-1); }
-        #Sali      { background-color: var(--gun-2); }
-        #Carsamba  { background-color: var(--gun-3); }
-        #Persembe  { background-color: var(--gun-4); }
-        #Cuma      { background-color: var(--gun-5); }
-        #Cumartesi { background-color: var(--gun-6); }
-        #Pazar     { background-color: var(--gun-7); }
+        #Pazartesi { background-color: var(--gun-1); } #Sali { background-color: var(--gun-2); } #Carsamba { background-color: var(--gun-3); } #Persembe { background-color: var(--gun-4); } #Cuma { background-color: var(--gun-5); } #Cumartesi { background-color: var(--gun-6); } #Pazar { background-color: var(--gun-7); }
         
-        .gun-baslik { text-align: center; padding: 12px 0; font-weight: 600; font-size: 14px; position: sticky; top: 0; z-index: 5; border-radius: 12px; order: -1; background: var(--popup-bg); backdrop-filter: blur(8px); box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 4px; }
+        /* basılı tutarken mavi seçim olmaması için user-select eklendi */
+        .gun-baslik { text-align: center; padding: 12px 0; font-weight: 600; font-size: 14px; position: sticky; top: 0; z-index: 5; border-radius: 12px; order: -1; background: var(--popup-bg); backdrop-filter: blur(8px); box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 4px; cursor: pointer; user-select: none; -webkit-user-select: none; }
         
         .gorev-kutu { color: #ffffff; border-radius: 12px; padding: 10px; font-size: 12px; box-sizing: border-box; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: transform 0.2s ease; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
         .gorev-kutu:active { transform: scale(0.96); } 
-        
         .ekle-btn { position: fixed; bottom: 30px; right: 30px; background: var(--btn-bg); color: var(--btn-text); border: none; border-radius: 20px; width: 64px; height: 64px; font-size: 32px; box-shadow: 0 4px 14px rgba(0,0,0,0.2); z-index: 100; display: flex; align-items: center; justify-content: center; transition: background 0.3s; cursor: pointer;}
         
         .popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 200; align-items: center; justify-content: center; }
@@ -97,6 +68,7 @@
 
     <button class="ekle-btn" id="yeniEkleBtn">+</button>
 
+    <!-- Normal Ekleme Formu -->
     <div class="popup" id="eklemePopup">
         <div class="popup-icerik">
             <h3 style="margin: 0 0 5px 0; text-align: center; font-size: 18px;">Yeni Plan</h3>
@@ -121,6 +93,7 @@
         </div>
     </div>
 
+    <!-- Silme Onay Ekranı -->
     <div class="popup" id="silmePopup">
         <div class="popup-icerik" style="text-align: center;">
             <h3 style="margin: 0; font-size: 18px;">Görevi Sil</h3>
@@ -132,6 +105,24 @@
         </div>
     </div>
 
+    <!-- YENİ: GÜN KOPYALA / YAPIŞTIR EKRANI -->
+    <div class="popup" id="gunIslemPopup">
+        <div class="popup-icerik" style="text-align: center;">
+            <h3 id="islemGunBaslik" style="margin: 0; font-size: 18px;">Gün Adı</h3>
+            <p style="margin: 5px 0 15px 0; opacity: 0.7; font-size: 14px;">Tüm planları kopyala veya yapıştır.</p>
+            <div class="btn-grup" style="flex-direction: column; gap: 10px;">
+                <button class="kaydet-btn" id="kopyalaBtn">Günü Kopyala</button>
+                <button class="kaydet-btn" id="yapistirBtn" style="background: #007AFF; display: none;">Buraya Yapıştır</button>
+                <button class="kapat-btn" id="gunIslemIptalBtn">Vazgeç</button>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(hata => console.log(hata));
+        }
+    </script>
 </body>
 </html>
